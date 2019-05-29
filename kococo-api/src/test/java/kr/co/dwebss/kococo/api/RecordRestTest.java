@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +16,14 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import kr.co.dwebss.kococo.core.entities.Analysis;
+import kr.co.dwebss.kococo.core.entities.AnalysisDetails;
 import kr.co.dwebss.kococo.core.entities.Record;
 
 @RunWith(SpringRunner.class)
@@ -30,7 +34,6 @@ public class RecordRestTest {
     private TestRestTemplate restTemplate;
     @LocalServerPort
     int randomServerPort;
-/*
     @Test
     public void testPostRecord() throws URISyntaxException
     {
@@ -48,12 +51,14 @@ public class RecordRestTest {
         Analysis analysis = new Analysis(LocalDateTime.now(), LocalDateTime.now().plusHours(3), LocalDateTime.now()+"_testFileNm.wav","/rec_data/",set2);
         List set = new ArrayList();
         set.add(analysis);
-        Record record = new Record(null, "c0362dd4-97f4-488c-b31c-12cb23b534cf", LocalDateTime.now(), LocalDateTime.now().plusHours(8), set);
+        Record record = new Record(null, "7dc9e960-b0db-4c1c-81b5-2c8f2ce7ca4f", LocalDateTime.now(), LocalDateTime.now().plusHours(8), set);
+        record.setSleepStatusCdId(100103);
         ObjectMapper mapper = new ObjectMapper();
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-COM-PERSIST", "true");     
  
         HttpEntity<Record> request = new HttpEntity<>(record, headers);
+        /*
         try {
             String jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(request);
             System.out.println(jsonInString);
@@ -85,6 +90,7 @@ public class RecordRestTest {
         	    } ]
         	  } ]
         	}
+        */
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri, request, String.class);
 
         System.out.println(result.getStatusCodeValue());
@@ -95,7 +101,7 @@ public class RecordRestTest {
         //Verify request succeed
         assertEquals(201, result.getStatusCodeValue());
     }
-*/
+    /*
     @Test
     public void testPutRecord() throws URISyntaxException
     {
@@ -112,7 +118,6 @@ public class RecordRestTest {
         HttpHeaders headers = new HttpHeaders();
  
         HttpEntity<Record> request = new HttpEntity<>(record, headers);
-        /*
         try {
             String jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(request);
             System.out.println(jsonInString);
@@ -120,8 +125,6 @@ public class RecordRestTest {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }       
-        */
-        /*
         {
         	  "userAppId" : "c0362dd4-97f4-488c-b31c-12cb23b534cf",
         	  "recordStartDt" : "2019-05-24T12:00:16.614",
@@ -146,7 +149,6 @@ public class RecordRestTest {
         	    } ]
         	  } ]
         	}
-    	*/
         ResponseEntity<String> result = this.restTemplate.exchange(baseUrl, HttpMethod.PUT, request, String.class);
 
         System.out.println(result.getStatusCodeValue());
@@ -157,4 +159,5 @@ public class RecordRestTest {
         //Verify request succeed
         assertEquals(200, result.getStatusCodeValue());
     }
+*/    
 }

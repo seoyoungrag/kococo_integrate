@@ -59,7 +59,7 @@ public class StatisticsController implements ResourceProcessor<RepositoryLinksRe
 			if(getCodeValue == Integer.parseInt(STRING_FOR_STATISTICS_TERM_COD_NULL)) {
 				logger.error("dataCd값이 Code테이블에는 존재하지만, code_value 값에 값이 없음. datecd="+dateCd);
 			}
-			recordList = recordRepository.findByUserAppId(userappid);
+			recordList = recordRepository.findByUserAppId(userappid, null);
 		}else if(getCodeValue < 10) {
 			LocalDate startD = LocalDate.now().minusDays(getCodeValue);
 			LocalDate endD = LocalDate.now().plusDays(1);
@@ -80,18 +80,25 @@ public class StatisticsController implements ResourceProcessor<RepositoryLinksRe
 		}
 		//점수를 내기위해 각각 평균시간을 계산한 vo를 생성한다.
 		ReturnStatistics rsForAver = new ReturnStatistics();
-		rsForAver.recordedTimes = rs.recordedTimes/recordList.size();
-		rsForAver.snoringTimes = rs.snoringTimes/recordList.size();
-		rsForAver.grindingTimes = rs.grindingTimes/recordList.size();
-		rsForAver.osaTimes = rs.osaTimes/recordList.size();
-		rsForAver = getSleepScore(rsForAver);
-		//점수계산이 끝났으니, 리턴할 vo에 set한다.
-		rs.sleepScore = rsForAver.sleepScore < 0 ? 0 : rsForAver.sleepScore;
-		rs.timesBadSleepForMinus = rsForAver.timesBadSleepForMinus;
-		rs.timesBadSleep = rsForAver.timesBadSleep;
-		rs.timeDiffFromAppro = rsForAver.timeDiffFromAppro;
-		rs.description = rsForAver.description;
-		
+		if(rs.recordedTimes == 0) {
+			rs.sleepScore = 0;
+			rs.timesBadSleepForMinus = 0;
+			rs.timesBadSleep = 0;
+			rs.timeDiffFromAppro = 0;
+			rs.description = "데이터가 없습니다.";
+		}else {
+			rsForAver.recordedTimes = rs.recordedTimes/recordList.size();
+			rsForAver.snoringTimes = rs.snoringTimes/recordList.size();
+			rsForAver.grindingTimes = rs.grindingTimes/recordList.size();
+			rsForAver.osaTimes = rs.osaTimes/recordList.size();
+			rsForAver = getSleepScore(rsForAver);
+			//점수계산이 끝났으니, 리턴할 vo에 set한다.
+			rs.sleepScore = rsForAver.sleepScore < 0 ? 0 : rsForAver.sleepScore;
+			rs.timesBadSleepForMinus = rsForAver.timesBadSleepForMinus;
+			rs.timesBadSleep = rsForAver.timesBadSleep;
+			rs.timeDiffFromAppro = rsForAver.timeDiffFromAppro;
+			rs.description = rsForAver.description;
+		}
         Resource<ReturnStatistics> rtnObj = new Resource<ReturnStatistics>(rs);
 		return rtnObj;
 		

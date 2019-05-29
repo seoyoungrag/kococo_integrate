@@ -12,23 +12,27 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import kr.co.dwebss.kococo.core.entities.Record;
 import kr.co.dwebss.kococo.core.repository.RecordRepository;
 
+/*
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+*/
 public class JpaTest {
-
+	/*
 	@Autowired
 	RecordRepository recordRepository;
     @LocalServerPort
     int randomServerPort;
     
     @Test
-    public void testPutRecord() throws URISyntaxException
+    public void jpaTest() throws URISyntaxException
     {
     	
-    	List RecordList = recordRepository.findByUserAppId("23e34679-cfa1-49a4-9b07-badffe08235f");
+    	List<Record> RecordList = recordRepository.findByUserAppId("c0362dd4-97f4-488c-b31c-12cb23b534cf");
          
         assertEquals(RecordList.size(), RecordList.size());
     }
+    */
 }

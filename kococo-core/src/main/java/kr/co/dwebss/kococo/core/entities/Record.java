@@ -50,7 +50,9 @@ public class Record extends ResourceSupport implements java.io.Serializable {
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime consultingReplyRegistDt;
 	private List<Analysis> analysisList = new ArrayList<Analysis>(0);
-
+	private Code sleepStatusCd;
+	private Integer sleepStatusCdId;
+	
 	public Record() {
 	}
 
@@ -65,7 +67,7 @@ public class Record extends ResourceSupport implements java.io.Serializable {
 	public Record(Admin admin, User user, LocalDate recordStartD, LocalDateTime recordStartDt, LocalDate recordEndD, LocalDateTime recordEndDt,
 			Character consultingYn, Character consultingReplyYn, String consultingTitle, String consultingContents,
 			LocalDateTime consultingRegistDt, String consultingReplyContents, LocalDateTime consultingReplyRegistDt,
-			List<Analysis> analysisList) {
+			List<Analysis> analysisList, Code sleepStatusCd) {
 		this.admin = admin;
 		this.user = user;
 		this.recordStartD = recordStartD;
@@ -80,6 +82,7 @@ public class Record extends ResourceSupport implements java.io.Serializable {
 		this.consultingReplyContents = consultingReplyContents;
 		this.consultingReplyRegistDt = consultingReplyRegistDt;
 		this.analysisList = analysisList;
+		this.sleepStatusCd = sleepStatusCd;
 	}
 
 
@@ -100,6 +103,26 @@ public class Record extends ResourceSupport implements java.io.Serializable {
 
 	public void setRecordId(Integer recordId) {
 		this.recordId = recordId;
+	}
+
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "SLEEP_STATUS_CD", insertable = false, updatable = false)
+	public Code getSleepStatusCd() {
+		return this.sleepStatusCd;
+	}
+
+	public void setSleepStatusCd(Code sleepStatusCd) {
+		this.sleepStatusCd = sleepStatusCd;
+	}
+
+	@Column(name = "SLEEP_STATUS_CD", length = 11)
+	public Integer getSleepStatusCdId() {
+		return this.sleepStatusCdId;
+	}
+
+	public void setSleepStatusCdId(Integer sleepStatusCdId) {
+		this.sleepStatusCdId = sleepStatusCdId;
 	}
 
 	@Column(name = "USER_APP_ID", length = 36)
