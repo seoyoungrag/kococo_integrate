@@ -1,0 +1,11 @@
+spring:  profiles:    active: local
+ 
+# local
+---   
+spring:
+  datasource:    driver-class-name: com.mysql.cj.jdbc.Driver    url: jdbc:mysql://ec2-52-79-240-67.ap-northeast-2.compute.amazonaws.com:3306/kococo?useSSL=false&amp
+    username: kococo
+    password: dlfgkwk9!
+    initialization-mode: always
+  data:    rest:      base-path: /api  jpa:    show-sql: true
+  

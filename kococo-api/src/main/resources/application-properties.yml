@@ -1,0 +1,11 @@
+statistics:
+ dateCodes:
+  - 100301
+  - 100302
+  - 100303
+ dateValues:
+  - 1
+  - 30
+  - 0
+env:
+ mode: admin

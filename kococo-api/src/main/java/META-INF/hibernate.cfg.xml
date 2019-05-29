@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.password">dlfgkwk9!</property>
+        <property name="hibernate.connection.url">jdbc:mysql://ec2-52-79-240-67.ap-northeast-2.compute.amazonaws.com:3306/kococo</property>
+        <property name="hibernate.connection.username">kococo</property>
+        <property name="hibernate.default_schema">kococo</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.search.autoregister_listeners">false</property>
+        <property name="hibernate.validator.apply_to_ddl">false</property>
+        <mapping class="kr.co.dwebss.kococo.api.entities.Admin" />
+        <mapping class="kr.co.dwebss.kococo.api.entities.Code" />
+        <mapping class="kr.co.dwebss.kococo.api.entities.Record" />
+        <mapping class="kr.co.dwebss.kococo.api.entities.User" />
+        <mapping class="kr.co.dwebss.kococo.api.entities.AnalysisDetails" />
+        <mapping class="kr.co.dwebss.kococo.api.entities.Analysis" />
+    </session-factory>
+</hibernate-configuration>
