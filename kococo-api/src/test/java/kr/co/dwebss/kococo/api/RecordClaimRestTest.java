@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +23,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.co.dwebss.kococo.core.entities.Analysis;
+import kr.co.dwebss.kococo.core.entities.AnalysisDetails;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -35,12 +38,15 @@ public class RecordClaimRestTest {
     public void testPutRecordForClaim() throws URISyntaxException
     {
         //final String baseUrl = "http://localhost:"+randomServerPort+"/api/analysis/10";
-        final String baseUrl = "http://localhost:8080/api/analysis/10";
+        final String baseUrl = "http://localhost:8080/api/claim/analysisDetail/93";
         Analysis req = new Analysis();
-        req.setAnalysisId(10);
-        req.setClaimReasonCd(100101);
-        req.setClaimContents("테스트");
         req.setAnalysisServerUploadPath("/storage/rec_data");
+        AnalysisDetails ansd = new AnalysisDetails();
+        ansd.setClaimReasonCd(100101);
+        ansd.setClaimContents("테스트");
+        List<AnalysisDetails> andList = new ArrayList<>();
+        andList.add(ansd);
+        req.setAnalysisDetailsList(andList);
         URI uri = new URI(baseUrl);
 
         ObjectMapper mapper = new ObjectMapper();

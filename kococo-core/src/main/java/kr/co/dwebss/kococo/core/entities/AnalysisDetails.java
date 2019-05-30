@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.hateoas.ResourceSupport;
@@ -24,7 +25,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "analysis_details", catalog = "kococo")
 public class AnalysisDetails extends ResourceSupport implements java.io.Serializable {
-
+	
+	private Integer analysisId;
 	private Integer analysisDetailsId;
 	private Analysis analysis;
 	private Integer termTypeCd;
@@ -32,6 +34,11 @@ public class AnalysisDetails extends ResourceSupport implements java.io.Serializ
 	private LocalDateTime termStartDt;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime termEndDt;
+	private Character claimYn='N';
+	private Integer claimReasonCd;
+	private String claimContents;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+	private LocalDateTime claimRegistDt;
 
 	public AnalysisDetails() {
 	}
@@ -42,11 +49,16 @@ public class AnalysisDetails extends ResourceSupport implements java.io.Serializ
 		this.termEndDt = termEndDt;
 	}
 
-	public AnalysisDetails(Analysis analysis, Integer termTypeCd, LocalDateTime termStartDt, LocalDateTime termEndDt) {
+	public AnalysisDetails(Analysis analysis, Integer termTypeCd, LocalDateTime termStartDt, LocalDateTime termEndDt ,Character claimYn, Integer claimReasonCd,
+			String claimContents, LocalDateTime claimRegistDt) {
 		this.analysis = analysis;
 		this.termTypeCd = termTypeCd;
 		this.termStartDt = termStartDt;
 		this.termEndDt = termEndDt;
+		this.claimYn = claimYn;
+		this.claimReasonCd = claimReasonCd;
+		this.claimContents = claimContents;
+		this.claimRegistDt = claimRegistDt;
 	}
 
 	@Id
@@ -70,6 +82,15 @@ public class AnalysisDetails extends ResourceSupport implements java.io.Serializ
 
 	public void setAnalysis(Analysis analysis) {
 		this.analysis = analysis;
+	}
+
+	@Column(name = "ANALYSIS_ID", insertable = false, updatable = false)
+	public Integer getAnalysisId() {
+		return this.analysisId;
+	}
+
+	public void setAnalysisId(Integer analysisId) {
+		this.analysisId = analysisId;
 	}
 
 	@Column(name = "TERM_TYPE_CD")
@@ -99,4 +120,39 @@ public class AnalysisDetails extends ResourceSupport implements java.io.Serializ
 		this.termEndDt = termEndDt;
 	}
 
+	@Column(name = "CLAIM_YN", length = 1)
+	public Character getClaimYn() {
+		return this.claimYn;
+	}
+
+	public void setClaimYn(Character claimYn) {
+		this.claimYn = claimYn;
+	}
+
+	@Column(name = "CLAIM_REASON_CD")
+	public Integer getClaimReasonCd() {
+		return this.claimReasonCd;
+	}
+
+	public void setClaimReasonCd(Integer claimReasonCd) {
+		this.claimReasonCd = claimReasonCd;
+	}
+
+	@Column(name = "CLAIM_CONTENTS", length = 250)
+	public String getClaimContents() {
+		return this.claimContents;
+	}
+
+	public void setClaimContents(String claimContents) {
+		this.claimContents = claimContents;
+	}
+
+	@Column(name = "CLAIM_REGIST_DT", length = 19)
+	public LocalDateTime getClaimRegistDt() {
+		return this.claimRegistDt;
+	}
+
+	public void setClaimRegistDt(LocalDateTime claimRegistDt) {
+		this.claimRegistDt = claimRegistDt;
+	}
 }

@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import kr.co.dwebss.kococo.core.entities.Analysis;
+import kr.co.dwebss.kococo.core.entities.AnalysisDetails;
+import kr.co.dwebss.kococo.core.repository.AnalysisDetailRepository;
 import kr.co.dwebss.kococo.core.repository.AnalysisRepository;
 
 @RestController
@@ -33,30 +35,37 @@ public class AnalysisController implements ResourceProcessor<RepositoryLinksReso
 	@Autowired
 	AnalysisRepository analysisRepository;
 	
+	@Autowired
+	AnalysisDetailRepository analysisDetailsRepository;
+	
     private RepositoryEntityLinks entityLinks;
     
     public AnalysisController(RepositoryEntityLinks entityLinks) {
         this.entityLinks = entityLinks;
     }
 	
-	@RequestMapping(value = "/api/analysis/{id}", method = RequestMethod.PUT, produces = { "application/hal+json" })
+	@RequestMapping(value = "/api/claim/analysisDetail/{id}", method = RequestMethod.PUT, produces = { "application/hal+json" })
 	public Resource<Analysis> putAnalysisClaim(@PathVariable("id") Integer id, @RequestBody Analysis req) {
-		Optional<Analysis> ori = analysisRepository.findById(id);
+		Optional<AnalysisDetails> ori = analysisDetailsRepository.findById(id);
 		if (!ori.isPresent()) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, id + "에 해당하는 analysis 데이터가 없음", null);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, id + "에 해당하는 analysisDetails 데이터가 없음", null);
 		}
+		Optional<Analysis> oriAns = analysisRepository.findById(ori.get().getAnalysisId());
 		if (!Optional.ofNullable(req.getAnalysisServerUploadPath()).orElse("").equals("")
-				&& Optional.ofNullable(req.getClaimReasonCd()).orElse(0) != 0
-				&& !Optional.ofNullable(req.getClaimContents()).orElse("").equals("")) {
+				&& req.getAnalysisDetailsList() != null && req.getAnalysisDetailsList().size()>0 
+				&& Optional.ofNullable(req.getAnalysisDetailsList().get(0).getClaimReasonCd()).orElse(0) != 0
+				&& !Optional.ofNullable(req.getAnalysisDetailsList().get(0).getClaimContents()).orElse("").equals("")) {
 			ori.get().setClaimYn('Y');
 			ori.get().setClaimRegistDt(LocalDateTime.now());
-			ori.get().setClaimReasonCd(req.getClaimReasonCd());
-			ori.get().setClaimContents(req.getClaimContents());
-			ori.get().setAnalysisServerUploadDt(LocalDateTime.now());
-			ori.get().setAnalysisServerUploadPath(req.getAnalysisServerUploadPath());
-			ori.get().setAnalysisServerUploadYn('Y');
+			ori.get().setClaimReasonCd(req.getAnalysisDetailsList().get(0).getClaimReasonCd());
+			ori.get().setClaimContents(req.getAnalysisDetailsList().get(0).getClaimContents());
+			
+			oriAns.get().setAnalysisServerUploadDt(LocalDateTime.now());
+			oriAns.get().setAnalysisServerUploadPath(req.getAnalysisServerUploadPath());
+			oriAns.get().setAnalysisServerUploadYn('Y');
 
-			Analysis res = analysisRepository.save(ori.get());
+			analysisDetailsRepository.save(ori.get());
+			Analysis res = analysisRepository.save(oriAns.get());
 
 			Link selfLink = linkTo(methodOn(AnalysisController.class).getAnalysis(id)).withSelfRel();
 			res.add(selfLink);
