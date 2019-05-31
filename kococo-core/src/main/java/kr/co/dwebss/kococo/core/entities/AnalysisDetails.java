@@ -39,6 +39,7 @@ public class AnalysisDetails extends ResourceSupport implements java.io.Serializ
 	private String claimContents;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime claimRegistDt;
+	private String analysisData;
 
 	public AnalysisDetails() {
 	}
@@ -50,7 +51,7 @@ public class AnalysisDetails extends ResourceSupport implements java.io.Serializ
 	}
 
 	public AnalysisDetails(Analysis analysis, Integer termTypeCd, LocalDateTime termStartDt, LocalDateTime termEndDt ,Character claimYn, Integer claimReasonCd,
-			String claimContents, LocalDateTime claimRegistDt) {
+			String claimContents, LocalDateTime claimRegistDt, String analysisData) {
 		this.analysis = analysis;
 		this.termTypeCd = termTypeCd;
 		this.termStartDt = termStartDt;
@@ -59,6 +60,7 @@ public class AnalysisDetails extends ResourceSupport implements java.io.Serializ
 		this.claimReasonCd = claimReasonCd;
 		this.claimContents = claimContents;
 		this.claimRegistDt = claimRegistDt;
+		this.analysisData = analysisData;
 	}
 
 	@Id
@@ -145,6 +147,15 @@ public class AnalysisDetails extends ResourceSupport implements java.io.Serializ
 
 	public void setClaimContents(String claimContents) {
 		this.claimContents = claimContents;
+	}
+
+	@Column(name = "ANALYSIS_DATA")
+	public String getAnalysisData() {
+		return analysisData;
+	}
+
+	public void setAnalysisData(String analysisData) {
+		this.analysisData = analysisData;
 	}
 
 	@Column(name = "CLAIM_REGIST_DT", length = 19)
