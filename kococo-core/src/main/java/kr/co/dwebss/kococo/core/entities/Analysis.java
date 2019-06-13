@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -197,6 +198,7 @@ public class Analysis extends ResourceSupport implements java.io.Serializable {
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "analysis")
+	@OrderBy(value = "termStartDt ASC")
 	public List<AnalysisDetails> getAnalysisDetailsList() {
 		return analysisDetailsList;
 	}
