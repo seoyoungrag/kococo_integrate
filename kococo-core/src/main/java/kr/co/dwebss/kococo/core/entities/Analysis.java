@@ -48,6 +48,11 @@ public class Analysis extends ResourceSupport implements java.io.Serializable {
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime analysisServerUploadDt;
 	private List<AnalysisDetails> analysisDetailsList = new ArrayList<AnalysisDetails>(0);
+	private Character claimYn='N';
+	private Integer claimReasonCd;
+	private String claimContents;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+	private LocalDateTime claimRegistDt;
 
 	public Analysis() {
 	}
@@ -63,7 +68,8 @@ public class Analysis extends ResourceSupport implements java.io.Serializable {
 	
 	public Analysis(Record record, LocalDateTime analysisStartD, LocalDateTime analysisStartDt, LocalDateTime analysisEndD, LocalDateTime analysisEndDt,
 			String analysisFileNm, String analysisFileAppPath, Character analysisServerUploadYn,
-			String analysisServerUploadPath, LocalDateTime analysisServerUploadDt, List<AnalysisDetails> analysisDetailsList) {
+			String analysisServerUploadPath, LocalDateTime analysisServerUploadDt, List<AnalysisDetails> analysisDetailsList, Character claimYn, Integer claimReasonCd,
+			String claimContents, LocalDateTime claimRegistDt) {
 		this.record = record;
 		this.analysisStartD = analysisStartD;
 		this.analysisStartDt = analysisStartDt;
@@ -75,6 +81,10 @@ public class Analysis extends ResourceSupport implements java.io.Serializable {
 		this.analysisServerUploadPath = analysisServerUploadPath;
 		this.analysisServerUploadDt = analysisServerUploadDt;
 		this.analysisDetailsList = analysisDetailsList;
+		this.claimYn = claimYn;
+		this.claimReasonCd = claimReasonCd;
+		this.claimContents = claimContents;
+		this.claimRegistDt = claimRegistDt;
 	}
 
 
@@ -214,4 +224,40 @@ public class Analysis extends ResourceSupport implements java.io.Serializable {
 		this.analysisDetailsList = analysisDetailsList;
 	}
 
+	@Column(name = "CLAIM_YN", length = 1)
+	public Character getClaimYn() {
+		return this.claimYn;
+	}
+
+	public void setClaimYn(Character claimYn) {
+		this.claimYn = claimYn;
+	}
+
+	@Column(name = "CLAIM_REASON_CD")
+	public Integer getClaimReasonCd() {
+		return this.claimReasonCd;
+	}
+
+	public void setClaimReasonCd(Integer claimReasonCd) {
+		this.claimReasonCd = claimReasonCd;
+	}
+
+	@Column(name = "CLAIM_CONTENTS", length = 250)
+	public String getClaimContents() {
+		return this.claimContents;
+	}
+
+	public void setClaimContents(String claimContents) {
+		this.claimContents = claimContents;
+	}
+	
+
+	@Column(name = "CLAIM_REGIST_DT", length = 19)
+	public LocalDateTime getClaimRegistDt() {
+		return this.claimRegistDt;
+	}
+
+	public void setClaimRegistDt(LocalDateTime claimRegistDt) {
+		this.claimRegistDt = claimRegistDt;
+	}
 }

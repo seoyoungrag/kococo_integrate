@@ -38,16 +38,11 @@ public class RecordClaimRestTest {
     public void testPutRecordForClaim() throws URISyntaxException
     {
         //final String baseUrl = "http://localhost:"+randomServerPort+"/api/analysis/10";
-        final String baseUrl = "http://localhost:8080/api/claim/analysisDetail/93";
+        final String baseUrl = "http://localhost:8080/api/claim/analysis/1";
         Analysis req = new Analysis();
         req.setAnalysisServerUploadPath("/storage/rec_data");
-        AnalysisDetails ansd = new AnalysisDetails();
-        ansd.setClaimReasonCd(100101);
-        ansd.setClaimContents("테스트");
-        List<AnalysisDetails> andList = new ArrayList<>();
-        andList.add(ansd);
-        req.setAnalysisDetailsList(andList);
-        URI uri = new URI(baseUrl);
+        req.setClaimReasonCd(100101);
+        req.setClaimContents("테스트");
 
         ObjectMapper mapper = new ObjectMapper();
         HttpHeaders headers = new HttpHeaders();
