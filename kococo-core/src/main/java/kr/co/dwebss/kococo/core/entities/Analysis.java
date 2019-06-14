@@ -53,6 +53,7 @@ public class Analysis extends ResourceSupport implements java.io.Serializable {
 	private String claimContents;
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime claimRegistDt;
+	private String recordingData;
 
 	public Analysis() {
 	}
@@ -69,7 +70,7 @@ public class Analysis extends ResourceSupport implements java.io.Serializable {
 	public Analysis(Record record, LocalDateTime analysisStartD, LocalDateTime analysisStartDt, LocalDateTime analysisEndD, LocalDateTime analysisEndDt,
 			String analysisFileNm, String analysisFileAppPath, Character analysisServerUploadYn,
 			String analysisServerUploadPath, LocalDateTime analysisServerUploadDt, List<AnalysisDetails> analysisDetailsList, Character claimYn, Integer claimReasonCd,
-			String claimContents, LocalDateTime claimRegistDt) {
+			String claimContents, LocalDateTime claimRegistDt, String recordingData) {
 		this.record = record;
 		this.analysisStartD = analysisStartD;
 		this.analysisStartDt = analysisStartDt;
@@ -85,6 +86,7 @@ public class Analysis extends ResourceSupport implements java.io.Serializable {
 		this.claimReasonCd = claimReasonCd;
 		this.claimContents = claimContents;
 		this.claimRegistDt = claimRegistDt;
+		this.recordingData = recordingData;
 	}
 
 
@@ -260,4 +262,15 @@ public class Analysis extends ResourceSupport implements java.io.Serializable {
 	public void setClaimRegistDt(LocalDateTime claimRegistDt) {
 		this.claimRegistDt = claimRegistDt;
 	}
+
+	@Column(name = "RECORDING_DATA")
+	public String getRecordingData() {
+		return recordingData;
+	}
+
+	public void setRecordingData(String recordingData) {
+		this.recordingData = recordingData;
+	}
+	
+	
 }
