@@ -142,9 +142,9 @@ public class StatisticsController implements ResourceProcessor<RepositoryLinksRe
 	public ReturnStatistics getSleepScore(ReturnStatistics rs) {
 		//수면 적정 기준 시간, 기준 시간 미달 차감 점수, 기준 시간 초과 차감 점수를 가져온다.
 		List<Code> cdList = codeRepository.findByCodeBetween(300100, 300199);
-		int timeAppropriate = 8;
-		int excessMinus = 6;
-		int underMinus = 12;
+		int timeAppropriate = 8; //적정 수면 시간
+		int excessMinus = 6; //미달했을 때 수면 시간
+		int underMinus = 12; //초과했을 때 수면 시간
 		for(Code cd : cdList) {
 			if(cd.getCode()==300101) {
 				timeAppropriate = Integer.parseInt(Optional.ofNullable(cd.getCodeValue()).orElse(String.valueOf((timeAppropriate))));
@@ -156,22 +156,25 @@ public class StatisticsController implements ResourceProcessor<RepositoryLinksRe
 		}
 		//수면시간에서 기준 수면 시간에 대한 점수를 계산한다.
 		//기준 시간 기준으로 더 잤을 때, 덜 잤을 때 계산
-		rs.timeDiffFromAppro = ((rs.recordedTimes/60)/60)/1000 - timeAppropriate;
+		//rs.recordedTimes는 밀리세컨드로 저장됨
+		//timeAppropriate -> 시간
+		int hours   = (int) ((rs.recordedTimes / (1000*60*60)) % 24);
+		rs.timeDiffFromAppro = hours - timeAppropriate;
 		if(rs.timeDiffFromAppro>0) {
 			//더 잤으면
 			rs.sleepScore -= (excessMinus * rs.timeDiffFromAppro);
 			rs.description = "sleepScore = sleepScore{100} -(excessMinus{"+excessMinus+"} * rs.timeDiffFromAppro{"+rs.timeDiffFromAppro+"}){"+(excessMinus * rs.timeDiffFromAppro)+"}";
 		}else {
 			//덜 잤으면
-			rs.sleepScore -= (underMinus * rs.timeDiffFromAppro);
+			rs.sleepScore -= (underMinus * Math.abs(rs.timeDiffFromAppro));
 			rs.description = "sleepScore = sleepScore{100} -(underMinus{"+underMinus+"} * rs.timeDiffFromAppro{"+rs.timeDiffFromAppro+"}){"+(underMinus * rs.timeDiffFromAppro)+"}";
 		}
 		//나쁜 잠 차감식 = 수면점수 - (나쁜 잠 / 총 수면시간 *100)
 		//나쁜 잠 = 코골이+이갈이+무호흡 총합
 		rs.timesBadSleep = rs.snoringTimes + rs.grindingTimes + rs.osaTimes;
-		rs.timesBadSleepForMinus =(long) (((double)rs.timesBadSleep / (double)rs.recordedTimes) * 100);
+		rs.timesBadSleepForMinus =(long) ( Math.ceil(((double)rs.timesBadSleep / (double)rs.recordedTimes) * 100));
 		rs.sleepScore -= rs.timesBadSleepForMinus;
-		rs.description += "-( ( (rs.snoringTimes{"+rs.snoringTimes+"} + rs.grindingTimes{"+rs.grindingTimes+"} + rs.osaTimes{"+rs.osaTimes+"})/rs.recordedTimes{"+rs.recordedTimes+"} ) *100 ){"+rs.timesBadSleepForMinus+"}";
+		rs.description += "-Math.ceil( ( (rs.snoringTimes{"+rs.snoringTimes+"} + rs.grindingTimes{"+rs.grindingTimes+"} + rs.osaTimes{"+rs.osaTimes+"})/rs.recordedTimes{"+rs.recordedTimes+"} ) *100 ){"+rs.timesBadSleepForMinus+"}";
 		return rs;
 	}
 	public ReturnStatistics getSleepTimes(Record record) {
@@ -182,23 +185,27 @@ public class StatisticsController implements ResourceProcessor<RepositoryLinksRe
 			boolean isSnoring = false;
 			for(AnalysisDetails ansd : ans.getAnalysisDetailsList()) {
 				//코골이는 200101, 이갈이는 200102, 무호흡은 200103
-				//코골이는 분석 단위로 한번만 체크하면 되고, 체크되면 분석파일의 전체시간이 코골이 시간이 됨
+				//코골이는 분석 단위로 한번만 체크하면 되고, 체크되면 분석파일의 전체시간이 코골이 시간이 됨 
 				if(ansd.getTermTypeCd()==200101) {
 					isSnoring = true;
+					//rtnObj.snoringTimes += Duration.between(ansd.getTermStartDt(), ansd.getTermEndDt()).toMillis();
 				}
 				//이갈이는 시작시간과 종료시간을 누적
 				if(ansd.getTermTypeCd()==200102) {
-					rtnObj.grindingTimes += Duration.between(ansd.getTermStartDt(), ansd.getTermEndDt()).toMillis();
+					rtnObj.grindingTimes += Duration.between(ansd.getTermStartDt(), ansd.getTermEndDt()).toMillis() > 0? Duration.between(ansd.getTermStartDt(), ansd.getTermEndDt()).toMillis() : 0;
 				}
 				//무호흡도 시작시간과 종료시간을 누적
 				if(ansd.getTermTypeCd()==200103) {
-					rtnObj.osaTimes += Duration.between(ansd.getTermStartDt(), ansd.getTermEndDt()).toMillis();
+					rtnObj.osaTimes += Duration.between(ansd.getTermStartDt(), ansd.getTermEndDt()).toMillis() > 0? Duration.between(ansd.getTermStartDt(), ansd.getTermEndDt()).toMillis() : 0;
 				}
 			}
 			//코골이면 코골이 시간에 합산한다.
 			if(isSnoring) {
 				rtnObj.snoringTimes += Duration.between(ans.getAnalysisStartDt(), ans.getAnalysisEndDt()).toMillis();
+				rtnObj.snoringTimes -= rtnObj.grindingTimes;
+				rtnObj.snoringTimes -= rtnObj.osaTimes;
 			}
+			
 		}
 		
 		return rtnObj;
