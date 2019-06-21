@@ -89,6 +89,7 @@ public class UserController implements ResourceProcessor<RepositoryLinksResource
 				user.get().setUserHeight(Optional.ofNullable(req.getUserHeight()).orElse(user.get().getUserHeight()));
 				user.get().setUserAge(Optional.ofNullable(req.getUserAge()).orElse(user.get().getUserAge()));
 				user.get().setUserWeight(Optional.ofNullable(req.getUserWeight()).orElse(user.get().getUserWeight()));
+				user.get().setDeviceFileStoreDayTerm(Optional.ofNullable(req.getDeviceFileStoreDayTerm()).orElse(user.get().getDeviceFileStoreDayTerm()));
 				User savendUser = userRepository.save(user.get());
 		        Resource<User> resource = new Resource<User>(savendUser);
 				Link selfLink = entityLinks.linkToSingleResource(User.class, id);

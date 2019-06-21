@@ -32,6 +32,7 @@ public class User extends ResourceSupport implements java.io.Serializable {
 	@CreatedDate
 	private LocalDateTime userRegistDt;
 	private Set<Record> records = new HashSet<Record>(0);
+	private Integer deviceFileStoreDayTerm;
 
 	public User() {
 	}
@@ -41,7 +42,7 @@ public class User extends ResourceSupport implements java.io.Serializable {
 	}
 
 	public User(String userAppId, Integer userAge, Character userGender, Integer userWeight, Integer userHeight,
-			LocalDateTime userRegistDt, Set<Record> records) {
+			LocalDateTime userRegistDt, Set<Record> records, Integer deviceFileStoreDayTerm) {
 		this.userAppId = userAppId;
 		this.userAge = userAge;
 		this.userGender = userGender;
@@ -49,6 +50,7 @@ public class User extends ResourceSupport implements java.io.Serializable {
 		this.userHeight = userHeight;
 		this.userRegistDt = userRegistDt;
 		this.records = records;
+		this.deviceFileStoreDayTerm = deviceFileStoreDayTerm;
 	}
 
 	@Id
@@ -113,6 +115,15 @@ public class User extends ResourceSupport implements java.io.Serializable {
 
 	public void setRecords(Set<Record> records) {
 		this.records = records;
+	}
+
+	@Column(name = "DEVICE_FILE_STORE_DAY_TERM", length = 3)
+	public Integer getDeviceFileStoreDayTerm() {
+		return deviceFileStoreDayTerm;
+	}
+
+	public void setDeviceFileStoreDayTerm(Integer deviceFileStoreDayTerm) {
+		this.deviceFileStoreDayTerm = deviceFileStoreDayTerm;
 	}
 
 }

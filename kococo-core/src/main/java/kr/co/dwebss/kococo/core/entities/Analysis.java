@@ -103,7 +103,6 @@ public class Analysis extends ResourceSupport implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonIgnore
 	@JoinColumn(name = "RECORD_ID")
 	public Record getRecord() {
 		return this.record;
