@@ -60,12 +60,12 @@ public class StatisticsController implements ResourceProcessor<RepositoryLinksRe
 				logger.error("dataCd값이 Code테이블에는 존재하지만, code_value 값에 값이 없음. datecd="+dateCd);
 			}
 			recordList = recordRepository.findByUserAppId(userappid, null);
-		}else if(getCodeValue < 10) {
+		}else if(getCodeValue < 31) {
 			LocalDate startD = LocalDate.now().minusDays(getCodeValue);
 			LocalDate endD = LocalDate.now().plusDays(1);
 			recordList = recordRepository.findByUserAppIdAndRecordStartDBetween(userappid, startD, endD); 
 		}else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "유효하지 않은 dateCd, code_value가 10을 넘을 수 없음, db를 체크해야 합니다. dateCd="+dateCd, null);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "유효하지 않은 dateCd, code_value가 30을 넘을 수 없음, db를 체크해야 합니다. dateCd="+dateCd, null);
 		}
 		//기간 동안 수면시간, 코골이, 이갈이, 무호흡 총합계를 구한다.
 		//평균 vo를 별도로 만들어서 점수를 set 한후 return 할 것임.
@@ -76,6 +76,9 @@ public class StatisticsController implements ResourceProcessor<RepositoryLinksRe
 			rs.snoringTimes += tmp.snoringTimes;
 			rs.grindingTimes += tmp.grindingTimes;
 			rs.osaTimes += tmp.osaTimes;
+			rs.snoringCnt += tmp.snoringCnt;
+			rs.grindingCnt += tmp.grindingCnt;
+			rs.osaCnt += tmp.osaCnt;
 			
 		}
 		//점수를 내기위해 각각 평균시간을 계산한 vo를 생성한다.
@@ -91,15 +94,31 @@ public class StatisticsController implements ResourceProcessor<RepositoryLinksRe
 			rsForAver.snoringTimes = rs.snoringTimes/recordList.size();
 			rsForAver.grindingTimes = rs.grindingTimes/recordList.size();
 			rsForAver.osaTimes = rs.osaTimes/recordList.size();
+			if(rs.snoringCnt>0 && rs.snoringCnt/recordList.size()==0) {
+				rsForAver.snoringCnt = 1;
+			}else {
+				rsForAver.snoringCnt = rs.snoringCnt/recordList.size();
+			}
+			if(rs.grindingCnt>0 && rs.grindingCnt/recordList.size()==0) {
+				rsForAver.grindingCnt = 1;
+			}else {
+				rsForAver.grindingCnt = rs.grindingCnt/recordList.size();
+			}
+			if(rs.grindingCnt>0 && rs.grindingCnt/recordList.size()==0) {
+				rsForAver.osaCnt = 1;
+			}else {
+				rsForAver.osaCnt = rs.osaCnt/recordList.size();
+			}
 			rsForAver = getSleepScore(rsForAver);
 			//점수계산이 끝났으니, 리턴할 vo에 set한다.
 			rs.sleepScore = rsForAver.sleepScore < 0 ? 0 : rsForAver.sleepScore;
+			rsForAver.sleepScore = rsForAver.sleepScore < 0 ? 0 : rsForAver.sleepScore;
 			rs.timesBadSleepForMinus = rsForAver.timesBadSleepForMinus;
 			rs.timesBadSleep = rsForAver.timesBadSleep;
 			rs.timeDiffFromAppro = rsForAver.timeDiffFromAppro;
 			rs.description = rsForAver.description;
 		}
-        Resource<ReturnStatistics> rtnObj = new Resource<ReturnStatistics>(rs);
+        Resource<ReturnStatistics> rtnObj = new Resource<ReturnStatistics>(rsForAver);
 		return rtnObj;
 		
 		
@@ -120,6 +139,9 @@ public class StatisticsController implements ResourceProcessor<RepositoryLinksRe
 		rs.snoringTimes += tmp.snoringTimes;
 		rs.grindingTimes += tmp.grindingTimes;
 		rs.osaTimes += tmp.osaTimes;
+		rs.snoringCnt += tmp.snoringCnt;
+		rs.grindingCnt += tmp.grindingCnt;
+		rs.osaCnt += tmp.osaCnt;
 		getSleepScore(rs);
 		rs.sleepScore = rs.sleepScore < 0 ? 0 : rs.sleepScore;
 		
@@ -189,14 +211,17 @@ public class StatisticsController implements ResourceProcessor<RepositoryLinksRe
 				if(ansd.getTermTypeCd()==200101) {
 					isSnoring = true;
 					//rtnObj.snoringTimes += Duration.between(ansd.getTermStartDt(), ansd.getTermEndDt()).toMillis();
+					rtnObj.snoringCnt++;
 				}
 				//이갈이는 시작시간과 종료시간을 누적
 				if(ansd.getTermTypeCd()==200102) {
 					rtnObj.grindingTimes += Duration.between(ansd.getTermStartDt(), ansd.getTermEndDt()).toMillis() > 0? Duration.between(ansd.getTermStartDt(), ansd.getTermEndDt()).toMillis() : 0;
+					rtnObj.grindingCnt++;
 				}
 				//무호흡도 시작시간과 종료시간을 누적
 				if(ansd.getTermTypeCd()==200103) {
 					rtnObj.osaTimes += Duration.between(ansd.getTermStartDt(), ansd.getTermEndDt()).toMillis() > 0? Duration.between(ansd.getTermStartDt(), ansd.getTermEndDt()).toMillis() : 0;
+					rtnObj.osaCnt++;
 				}
 			}
 			//코골이면 코골이 시간에 합산한다.
@@ -221,6 +246,9 @@ class ReturnStatistics {
 	long snoringTimes = 0; //코골이 시간
 	long osaTimes = 0; //무호흡 시간
 	long grindingTimes = 0; //이갈이 시간
+	long snoringCnt = 0; //코골이 회수
+	long osaCnt = 0; //무호흡 회수
+	long grindingCnt = 0; //이갈이 회수
 	String description = "";
 	public String getDescription() {
 		return description;
@@ -254,6 +282,15 @@ class ReturnStatistics {
 	}
 	public int getSleepScore() {
 		return sleepScore;
+	}
+	public long getSnoringCnt() {
+		return snoringCnt;
+	}
+	public long getOsaCnt() {
+		return osaCnt;
+	}
+	public long getGrindingCnt() {
+		return grindingCnt;
 	}
 	
 }

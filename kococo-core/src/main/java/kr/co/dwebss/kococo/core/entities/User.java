@@ -32,7 +32,7 @@ public class User extends ResourceSupport implements java.io.Serializable {
 	@CreatedDate
 	private LocalDateTime userRegistDt;
 	private Set<Record> records = new HashSet<Record>(0);
-	private Integer deviceFileStoreDayTerm;
+	private Integer deviceFileStoreDayTerm=90;
 
 	public User() {
 	}

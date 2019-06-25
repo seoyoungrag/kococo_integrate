@@ -21,12 +21,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import kr.co.dwebss.kococo.core.entities.Analysis;
 import kr.co.dwebss.kococo.core.entities.Record;
+import kr.co.dwebss.kococo.core.entities.RecordOnly;
 import kr.co.dwebss.kococo.core.repository.AnalysisRepository;
+import kr.co.dwebss.kococo.core.repository.RecordOnlyRepository;
 import kr.co.dwebss.kococo.core.repository.RecordRepository;
 
 @RestController
@@ -35,6 +38,8 @@ public class RecordController implements ResourceProcessor<RepositoryLinksResour
 
 	@Autowired
 	RecordRepository recordRepository;
+	@Autowired
+	RecordOnlyRepository recordOnlyRepository;
 	@Autowired
 	AnalysisRepository analysisRepository;
 	
