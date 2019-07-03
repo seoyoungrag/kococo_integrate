@@ -21,7 +21,7 @@ import org.springframework.hateoas.ResourceSupport;
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "user", catalog = "kococo")
+@Table(name = "user", catalog = "kococo_dev")
 public class User extends ResourceSupport implements java.io.Serializable {
 
 	private String userAppId;
@@ -29,10 +29,12 @@ public class User extends ResourceSupport implements java.io.Serializable {
 	private Character userGender;
 	private Integer userWeight;
 	private Integer userHeight;
+	private Integer userTicketCnt;
 	@CreatedDate
 	private LocalDateTime userRegistDt;
-	private Set<Record> records = new HashSet<Record>(0);
 	private Integer deviceFileStoreDayTerm=90;
+	private Set<Record> records = new HashSet<Record>(0);
+	private Set<Payment> payments = new HashSet<Payment>(0);
 
 	public User() {
 	}
@@ -42,18 +44,22 @@ public class User extends ResourceSupport implements java.io.Serializable {
 	}
 
 	public User(String userAppId, Integer userAge, Character userGender, Integer userWeight, Integer userHeight,
-			LocalDateTime userRegistDt, Set<Record> records, Integer deviceFileStoreDayTerm) {
+			Integer userTicketCnt, LocalDateTime userRegistDt, Integer deviceFileStoreDayTerm, Set<Record> records,
+			Set<Payment> payments) {
 		this.userAppId = userAppId;
 		this.userAge = userAge;
 		this.userGender = userGender;
 		this.userWeight = userWeight;
 		this.userHeight = userHeight;
+		this.userTicketCnt = userTicketCnt;
 		this.userRegistDt = userRegistDt;
-		this.records = records;
 		this.deviceFileStoreDayTerm = deviceFileStoreDayTerm;
+		this.records = records;
+		this.payments = payments;
 	}
 
 	@Id
+
 	@Column(name = "USER_APP_ID", unique = true, nullable = false, length = 36)
 	public String getUserAppId() {
 		return this.userAppId;
@@ -99,6 +105,15 @@ public class User extends ResourceSupport implements java.io.Serializable {
 		this.userHeight = userHeight;
 	}
 
+	@Column(name = "USER_TICKET_CNT")
+	public Integer getUserTicketCnt() {
+		return this.userTicketCnt;
+	}
+
+	public void setUserTicketCnt(Integer userTicketCnt) {
+		this.userTicketCnt = userTicketCnt;
+	}
+
 	@Column(name = "USER_REGIST_DT", length = 19)
 	public LocalDateTime getUserRegistDt() {
 		return this.userRegistDt;
@@ -108,6 +123,15 @@ public class User extends ResourceSupport implements java.io.Serializable {
 		this.userRegistDt = userRegistDt;
 	}
 
+	@Column(name = "DEVICE_FILE_STORE_DAY_TERM", length = 3)
+	public Integer getDeviceFileStoreDayTerm() {
+		return deviceFileStoreDayTerm;
+	}
+
+	public void setDeviceFileStoreDayTerm(Integer deviceFileStoreDayTerm) {
+		this.deviceFileStoreDayTerm = deviceFileStoreDayTerm;
+	}
+	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	public Set<Record> getRecords() {
 		return this.records;
@@ -117,13 +141,13 @@ public class User extends ResourceSupport implements java.io.Serializable {
 		this.records = records;
 	}
 
-	@Column(name = "DEVICE_FILE_STORE_DAY_TERM", length = 3)
-	public Integer getDeviceFileStoreDayTerm() {
-		return deviceFileStoreDayTerm;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	public Set<Payment> getPayments() {
+		return this.payments;
 	}
 
-	public void setDeviceFileStoreDayTerm(Integer deviceFileStoreDayTerm) {
-		this.deviceFileStoreDayTerm = deviceFileStoreDayTerm;
+	public void setPayments(Set<Payment> payments) {
+		this.payments = payments;
 	}
 
 }

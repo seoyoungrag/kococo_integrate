@@ -37,8 +37,8 @@ public class RecordRestTest {
     @Test
     public void testPostRecord() throws URISyntaxException
     {
-        //final String baseUrl = "http://localhost:"+randomServerPort+"/api/record/";
-    	final String baseUrl = "http://localhost:8080/api/record/";
+        final String baseUrl = "http://localhost:"+randomServerPort+"/api/record/";
+    	//final String baseUrl = "http://localhost:8080/api/record/";
         
         URI uri = new URI(baseUrl);
         AnalysisDetails analysisDetails = new AnalysisDetails(200101, LocalDateTime.now().plusSeconds(10), LocalDateTime.now().plusSeconds(124));
@@ -51,7 +51,7 @@ public class RecordRestTest {
         Analysis analysis = new Analysis(LocalDateTime.now(), LocalDateTime.now().plusHours(3), LocalDateTime.now()+"_testFileNm.wav","/rec_data/",set2);
         List set = new ArrayList();
         set.add(analysis);
-        Record record = new Record(null, "7dc9e960-b0db-4c1c-81b5-2c8f2ce7ca4f", LocalDateTime.now(), LocalDateTime.now().plusHours(8), set);
+        Record record = new Record("7dc9e960-b0db-4c1c-81b5-2c8f2ce7ca4f", LocalDateTime.now(), LocalDateTime.now().plusHours(8), set);
         record.setSleepStatusCdId(100103);
         ObjectMapper mapper = new ObjectMapper();
         HttpHeaders headers = new HttpHeaders();

@@ -13,7 +13,7 @@ import kr.co.dwebss.kococo.core.entities.RecordOnly;
 @RepositoryRestResource(collectionResourceRel = "recordOnly", path = "recordOnly")
 public interface RecordOnlyRepository extends JpaRepository<RecordOnly,Integer>{
     List<RecordOnly> findByUserAppId(@Param("userAppId") String userAppId, Pageable pageable);
-    List<RecordOnly> findByUserAppIdAndConsultingYn(@Param("userAppId") String userAppId, @Param("consultingYn") Character consultingYn, Pageable pageable);
+    List<RecordOnly> findByUserAppIdAndConsultingsNotNull(@Param("userAppId") String userAppId, Pageable pageable);
     List<RecordOnly> findByUserAppIdAndRecordStartDBetween(
     		@Param("userAppId") String userAppId, 
     		@Param("startD")LocalDate startD, 

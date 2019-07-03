@@ -4,6 +4,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,14 +22,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import kr.co.dwebss.kococo.core.entities.Analysis;
+import kr.co.dwebss.kococo.core.entities.Consulting;
 import kr.co.dwebss.kococo.core.entities.Record;
-import kr.co.dwebss.kococo.core.entities.RecordOnly;
 import kr.co.dwebss.kococo.core.repository.AnalysisRepository;
+import kr.co.dwebss.kococo.core.repository.ConsultingRepository;
 import kr.co.dwebss.kococo.core.repository.RecordOnlyRepository;
 import kr.co.dwebss.kococo.core.repository.RecordRepository;
 
@@ -42,6 +43,9 @@ public class RecordController implements ResourceProcessor<RepositoryLinksResour
 	RecordOnlyRepository recordOnlyRepository;
 	@Autowired
 	AnalysisRepository analysisRepository;
+	@Autowired
+	ConsultingRepository consultingRepository;
+
 	
     private RepositoryEntityLinks entityLinks;
     
@@ -55,8 +59,12 @@ public class RecordController implements ResourceProcessor<RepositoryLinksResour
 		if (!ori.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, id + "에 해당하는 record 데이터가 없음", null);
 		}
-		if (!Optional.ofNullable(req.getConsultingTitle()).orElse("").equals("")
-				&& !Optional.ofNullable(req.getConsultingContents()).orElse("").equals("")) {
+		if(req.getConsultings() == null || req.getConsultings().size() ==0) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "컨설팅 정보가 없습니다.", null);
+		}
+		
+		if (!Optional.ofNullable(req.getConsultings().get(0).getConsultingTitle()).orElse("").equals("")
+				&& !Optional.ofNullable(req.getConsultings().get(0).getConsultingContents()).orElse("").equals("")) {
 			//분석정보 업데이트(child)
 			List<Analysis> ansList = req.getAnalysisList();
 			for(Analysis ans : ansList) {
@@ -69,19 +77,24 @@ public class RecordController implements ResourceProcessor<RepositoryLinksResour
 					ansU.get().setAnalysisServerUploadPath(ans.getAnalysisServerUploadPath());
 					ansU.get().setAnalysisServerUploadYn('Y');
 					Analysis ansRes = analysisRepository.save(ansU.get());
-					
 				} else {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 							"analysisServerUploadPath 값이 없음, analysisId="+ans.getAnalysisId()+" recordId="+id, null);
 				}
 			}
 			//레코드 업데이트(parent)
-			ori.get().setConsultingTitle(req.getConsultingTitle());
-			ori.get().setConsultingContents(req.getConsultingContents());
-			ori.get().setConsultingYn('Y');
-			ori.get().setConsultingRegistDt(LocalDateTime.now());
+			Consulting consulting = new Consulting();
+			if(ori.get().getConsultings()!=null && ori.get().getConsultings().size()>0) {
+				consulting = ori.get().getConsultings().get(0);
+			}
+			consulting.setRecord(ori.get());
+			consulting.setConsultingTitle(req.getConsultings().get(0).getConsultingTitle());
+			consulting.setConsultingContents(req.getConsultings().get(0).getConsultingContents());
+			consulting.setConsultingRegistDt(LocalDateTime.now());
 			
-			Record res = recordRepository.save(ori.get());
+			consultingRepository.save(consulting);
+			//Record res = recordRepository.save(ori.get());
+			Record res = recordRepository.findById(id).get();
 			Link selfLink = linkTo(methodOn(RecordController.class).getRecord(id)).withSelfRel();
 			res.add(selfLink);
 			Resource<Record> resource = new Resource<Record>(res);
