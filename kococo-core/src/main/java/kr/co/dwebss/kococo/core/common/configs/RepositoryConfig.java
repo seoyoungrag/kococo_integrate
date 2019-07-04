@@ -7,6 +7,8 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import kr.co.dwebss.kococo.core.entities.Analysis;
 import kr.co.dwebss.kococo.core.entities.AnalysisDetails;
 import kr.co.dwebss.kococo.core.entities.Code;
+import kr.co.dwebss.kococo.core.entities.Consulting;
+import kr.co.dwebss.kococo.core.entities.ConsultingReply;
 import kr.co.dwebss.kococo.core.entities.Record;
 import kr.co.dwebss.kococo.core.entities.RecordOnly;
 import kr.co.dwebss.kococo.core.entities.User;
@@ -22,6 +24,8 @@ public class RepositoryConfig implements RepositoryRestConfigurer {
         config.exposeIdsFor(RecordOnly.class);
         config.exposeIdsFor(Analysis.class);
         config.exposeIdsFor(AnalysisDetails.class);
+        config.exposeIdsFor(Consulting.class);
+        config.exposeIdsFor(ConsultingReply.class);
     }
     
 }
