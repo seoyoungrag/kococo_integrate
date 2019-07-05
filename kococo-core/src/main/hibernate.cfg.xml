@@ -7,9 +7,9 @@
         <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.connection.password">dlfgkwk9!</property>
-        <property name="hibernate.connection.url">jdbc:mysql://52.79.88.47:3306/kococo_dev?useSSL=false&amp;serverTimezone=Asia/Seoul</property>
-        <property name="hibernate.connection.username">kococo_dev</property>
-        <property name="hibernate.default_schema">kococo_dev</property>
+        <property name="hibernate.connection.url">jdbc:mysql://52.79.88.47:3306/kococo?useSSL=false&amp;serverTimezone=Asia/Seoul</property>
+        <property name="hibernate.connection.username">kococo</property>
+        <property name="hibernate.default_schema">kococo</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.search.autoregister_listeners">false</property>
         <property name="hibernate.validator.apply_to_ddl">false</property>

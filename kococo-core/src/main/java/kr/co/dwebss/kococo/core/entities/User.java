@@ -21,7 +21,7 @@ import org.springframework.hateoas.ResourceSupport;
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "user", catalog = "kococo_dev")
+@Table(name = "user", catalog = "kococo")
 public class User extends ResourceSupport implements java.io.Serializable {
 
 	private String userAppId;

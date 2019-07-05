@@ -2,14 +2,14 @@
 <!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
 
 <hibernate-reverse-engineering>
-  <table-filter match-catalog="kococo_dev" match-name="admin"/>
-  <table-filter match-catalog="kococo_dev" match-name="analysis"/>
-  <table-filter match-catalog="kococo_dev" match-name="analysis_details"/>
-  <table-filter match-catalog="kococo_dev" match-name="code"/>
-  <table-filter match-catalog="kococo_dev" match-name="consulting"/>
-  <table-filter match-catalog="kococo_dev" match-name="consulting_reply"/>
-  <table-filter match-catalog="kococo_dev" match-name="payment"/>
-  <table-filter match-catalog="kococo_dev" match-name="record"/>
-  <table-filter match-catalog="kococo_dev" match-name="user"/>
-  <table-filter match-catalog="kococo_dev" match-name="user_ticket_history"/>
+  <table-filter match-catalog="kococo" match-name="admin"/>
+  <table-filter match-catalog="kococo" match-name="analysis"/>
+  <table-filter match-catalog="kococo" match-name="analysis_details"/>
+  <table-filter match-catalog="kococo" match-name="code"/>
+  <table-filter match-catalog="kococo" match-name="consulting"/>
+  <table-filter match-catalog="kococo" match-name="consulting_reply"/>
+  <table-filter match-catalog="kococo" match-name="payment"/>
+  <table-filter match-catalog="kococo" match-name="record"/>
+  <table-filter match-catalog="kococo" match-name="user"/>
+  <table-filter match-catalog="kococo" match-name="user_ticket_history"/>
 </hibernate-reverse-engineering>
