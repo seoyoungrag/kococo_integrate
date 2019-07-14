@@ -99,6 +99,28 @@ public class UserController implements ResourceProcessor<RepositoryLinksResource
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, id + "에 해당하는 user 데이터가 없음, userId="+id, null);
 			}
     }
+
+    @RequestMapping(value="/api/ticket/{id}/{ticket}", method=RequestMethod.PUT, produces = { "application/hal+json" })
+    public Resource<User> putUserAppId(@PathVariable("id") String id, @PathVariable("ticket") int ticket) {
+    	if(Optional.ofNullable(id).orElse("").equals("")) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, id + "userId는 필수 값임", null);
+    	}
+    	Optional<User> user = userRepository.findById(id);
+			if (user.isPresent()) {
+				if(user.get().getUserTicketCnt()==null) {
+					user.get().setUserTicketCnt(0);
+				}
+				user.get().setUserTicketCnt(user.get().getUserTicketCnt()+ticket);
+				User savendUser = userRepository.save(user.get());
+		        Resource<User> resource = new Resource<User>(savendUser);
+				Link selfLink = entityLinks.linkToSingleResource(User.class, id);
+		        resource.add(selfLink);
+				return resource;
+			} else {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, id + "에 해당하는 user 데이터가 없음, userId="+id, null);
+			}
+    }
+    
 	@Override
 	public RepositoryLinksResource process(RepositoryLinksResource resource) {
 	    resource.add(ControllerLinkBuilder.linkTo(ControllerLinkBuilder.methodOn(UserController.class).getUserAppId(null)).withRel("userappid"));

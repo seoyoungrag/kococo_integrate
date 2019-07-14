@@ -9,9 +9,11 @@ import kr.co.dwebss.kococo.core.entities.AnalysisDetails;
 import kr.co.dwebss.kococo.core.entities.Code;
 import kr.co.dwebss.kococo.core.entities.Consulting;
 import kr.co.dwebss.kococo.core.entities.ConsultingReply;
+import kr.co.dwebss.kococo.core.entities.Payment;
 import kr.co.dwebss.kococo.core.entities.Record;
 import kr.co.dwebss.kococo.core.entities.RecordOnly;
 import kr.co.dwebss.kococo.core.entities.User;
+import kr.co.dwebss.kococo.core.entities.UserTicketHistory;
 
 @Configuration
 public class RepositoryConfig implements RepositoryRestConfigurer {
@@ -26,6 +28,9 @@ public class RepositoryConfig implements RepositoryRestConfigurer {
         config.exposeIdsFor(AnalysisDetails.class);
         config.exposeIdsFor(Consulting.class);
         config.exposeIdsFor(ConsultingReply.class);
+        config.exposeIdsFor(Payment.class);
+        config.exposeIdsFor(UserTicketHistory.class);
+        config.setDefaultPageSize(30);
     }
     
 }

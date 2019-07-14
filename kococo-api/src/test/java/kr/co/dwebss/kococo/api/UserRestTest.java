@@ -31,7 +31,7 @@ public class UserRestTest {
     public void testPutRecord() throws URISyntaxException
     {
         //final String baseUrl = "http://localhost:"+randomServerPort+"/api/record/complete";
-    	final String baseUrl = "http://localhost:"+randomServerPort+"/api/userappid/7dc9e960-b0db-4c1c-81b5-2c8f2ce7ca4f";
+    	final String baseUrl = "http://localhost:"+randomServerPort+"/api/userappid/146723ce-4772-4111-8856-fb3b0814d953";
         
     	User user = new User();
     	user.setUserAge(32);

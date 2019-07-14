@@ -51,7 +51,7 @@ public class RecordRestTest {
         Analysis analysis = new Analysis(LocalDateTime.now(), LocalDateTime.now().plusHours(3), LocalDateTime.now()+"_testFileNm.wav","/rec_data/",set2);
         List set = new ArrayList();
         set.add(analysis);
-        Record record = new Record("7dc9e960-b0db-4c1c-81b5-2c8f2ce7ca4f", LocalDateTime.now(), LocalDateTime.now().plusHours(8), set);
+        Record record = new Record("146723ce-4772-4111-8856-fb3b0814d953", LocalDateTime.now(), LocalDateTime.now().plusHours(8), set);
         record.setSleepStatusCdId(100103);
         ObjectMapper mapper = new ObjectMapper();
         HttpHeaders headers = new HttpHeaders();
