@@ -18,6 +18,7 @@ import javax.persistence.TemporalType;
 @Table(name = "payment", catalog = "kococo")
 public class Payment implements java.io.Serializable {
 
+	private String userAppId;
 	private int paymentId;
 	private User user;
 	private int paymentStatus;
@@ -30,6 +31,17 @@ public class Payment implements java.io.Serializable {
 	public Payment() {
 	}
 
+	public Payment(int paymentId, String userAppId, int paymentStatus, String paymentOrderId, String paymentPurchaseToken,
+			String paymentDeveloperPayload, Date paymentDt) {
+		this.paymentId = paymentId;
+		this.userAppId = userAppId;
+		this.paymentStatus = paymentStatus;
+		this.paymentOrderId = paymentOrderId;
+		this.paymentPurchaseToken = paymentPurchaseToken;
+		this.paymentDeveloperPayload = paymentDeveloperPayload;
+		this.paymentDt = paymentDt;
+	}
+	
 	public Payment(int paymentId, User user, int paymentStatus, String paymentOrderId, String paymentPurchaseToken,
 			String paymentDeveloperPayload, Date paymentDt) {
 		this.paymentId = paymentId;
@@ -64,8 +76,17 @@ public class Payment implements java.io.Serializable {
 		this.paymentId = paymentId;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "USER_APP_ID", nullable = false)
+	@Column(name = "USER_APP_ID", length = 36)
+	public String getUserAppId() {
+		return this.userAppId;
+	}
+
+	public void setUserAppId(String userAppId) {
+		this.userAppId = userAppId;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "USER_APP_ID", insertable = false, updatable = false)
 	public User getUser() {
 		return this.user;
 	}
