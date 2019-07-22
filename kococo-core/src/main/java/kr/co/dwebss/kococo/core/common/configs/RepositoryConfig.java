@@ -26,6 +26,7 @@ public class RepositoryConfig implements RepositoryRestConfigurer {
         config.exposeIdsFor(AnalysisDetails.class);
         config.exposeIdsFor(Consulting.class);
         config.exposeIdsFor(ConsultingReply.class);
+        config.setDefaultPageSize(30);
     }
     
 }
