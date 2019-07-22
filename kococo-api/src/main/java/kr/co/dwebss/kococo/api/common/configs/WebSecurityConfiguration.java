@@ -39,6 +39,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.exceptionHandling().authenticationEntryPoint(authencationEntryPoint);
 		
 		http.csrf().disable();
+		/*
 		http.formLogin().permitAll().loginProcessingUrl("/login").usernameParameter("USERNAME").passwordParameter("PASSWORD")
 		.successHandler(authsuccessHandler)
 		.failureHandler(authFailureHandler)
@@ -54,7 +55,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.POST,"/api/**").permitAll()
 		.antMatchers(HttpMethod.PUT,"/api/**").permitAll()
 		.antMatchers(HttpMethod.GET,"/actuator/**").permitAll()
+		.antMatchers(HttpMethod.GET,"/kococo/api/**").permitAll()
+		.antMatchers(HttpMethod.POST,"/kococo/api/**").permitAll()
+		.antMatchers(HttpMethod.PUT,"/kococo/api/**").permitAll()
 		//.antMatchers(HttpMethod.DELETE,"/api/**").permitAll()
 		.anyRequest().authenticated();
+		*/
+		
 	}
 }

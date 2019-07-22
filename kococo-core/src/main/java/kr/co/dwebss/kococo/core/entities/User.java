@@ -1,15 +1,18 @@
 package kr.co.dwebss.kococo.core.entities;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -29,12 +32,12 @@ public class User extends ResourceSupport implements java.io.Serializable {
 	private Character userGender;
 	private Integer userWeight;
 	private Integer userHeight;
-	private Integer userTicketCnt;
+	private Integer userTicketCnt=0;
 	@CreatedDate
 	private LocalDateTime userRegistDt;
 	private Integer deviceFileStoreDayTerm=90;
-	private Set<Record> records = new HashSet<Record>(0);
-	private Set<Payment> payments = new HashSet<Payment>(0);
+	private List<Record> records = new ArrayList<Record>(0);
+	private List<Payment> payments = new ArrayList<Payment>(0);
 
 	public User() {
 	}
@@ -44,8 +47,8 @@ public class User extends ResourceSupport implements java.io.Serializable {
 	}
 
 	public User(String userAppId, Integer userAge, Character userGender, Integer userWeight, Integer userHeight,
-			Integer userTicketCnt, LocalDateTime userRegistDt, Integer deviceFileStoreDayTerm, Set<Record> records,
-			Set<Payment> payments) {
+			Integer userTicketCnt, LocalDateTime userRegistDt, Integer deviceFileStoreDayTerm, List<Record> records,
+			List<Payment> payments) {
 		this.userAppId = userAppId;
 		this.userAge = userAge;
 		this.userGender = userGender;
@@ -132,21 +135,39 @@ public class User extends ResourceSupport implements java.io.Serializable {
 		this.deviceFileStoreDayTerm = deviceFileStoreDayTerm;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-	public Set<Record> getRecords() {
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "user")
+	@OrderBy(value = "recordStartDt ASC")
+	public List<Record> getRecords() {
 		return this.records;
 	}
 
-	public void setRecords(Set<Record> records) {
+	public void setRecords(List<Record> records) {
+		
+        if (this.records != null) {
+            this.records.forEach(record -> record.setUser(null));
+        }
+        if (records != null) {
+        	records.forEach(record -> record.setUser(this));
+        }
+        
 		this.records = records;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-	public Set<Payment> getPayments() {
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "user")
+	@OrderBy(value = "paymentDt ASC")
+	public List<Payment> getPayments() {
 		return this.payments;
 	}
 
-	public void setPayments(Set<Payment> payments) {
+	public void setPayments(List<Payment> payments) {
+		
+        if (this.payments != null) {
+            this.payments.forEach(payment -> payment.setUser(null));
+        }
+        if (payments != null) {
+        	payments.forEach(payment -> payment.setUser(this));
+        }
+        
 		this.payments = payments;
 	}
 
