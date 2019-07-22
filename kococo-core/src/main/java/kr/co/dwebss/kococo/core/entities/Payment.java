@@ -38,7 +38,7 @@ public class Payment implements java.io.Serializable {
 	}
 
 	public Payment(int paymentId, String userAppId, int paymentStatus, String paymentOrderId, String paymentPurchaseToken,
-			String paymentDeveloperPayload, Date paymentDt) {
+			String paymentDeveloperPayload, LocalDateTime paymentDt) {
 		this.paymentId = paymentId;
 		this.userAppId = userAppId;
 		this.paymentStatus = paymentStatus;
